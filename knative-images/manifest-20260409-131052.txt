@@ -1,0 +1,125 @@
+# Knative Images Manifest
+# Generated: 2026-04-09 13:10:52
+# Registry: harbor.idp.ecpk.ru/core/knative
+# Version: v1.21.2
+# Platform: linux/amd64
+# Total images: 14
+# Successful: 14
+# Failed: 0
+
+================================================================================
+
+## SUCCESSFUL IMAGES
+
+✅ eventing-controller
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/controller@sha256:966233b98967cc23d2a7300e4ca72be942f0bc53da0a924483a86ba6061a33eb
+   Method: docker export
+   Local tag: eventing-controller:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/eventing-controller:v1.21.2
+   Archive: eventing-controller.tar
+   Size: 79.55 MB
+
+✅ eventing-webhook
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/webhook@sha256:7c00866d5e88effab02413894a392e6770e7bd9605c8d90a5767a7a5c7fc74f8
+   Method: docker export
+   Local tag: eventing-webhook:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/eventing-webhook:v1.21.2
+   Archive: eventing-webhook.tar
+   Size: 77.78 MB
+
+✅ job-sink
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/jobsink@sha256:ffc8d68a0ca25e5bfabdcebca75122a8018613ed0076c9e899a35321b3b8311d
+   Method: docker export
+   Local tag: job-sink:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/job-sink:v1.21.2
+   Archive: job-sink.tar
+   Size: 75.54 MB
+
+✅ pingsource-mt-adapter
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/mtping@sha256:a08faf5efa901d5a6bc1862f7ba02b2cd8f1c6cb550bb29df32e5e1cb625a110
+   Method: docker export
+   Local tag: pingsource-mt-adapter:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/pingsource-mt-adapter:v1.21.2
+   Archive: pingsource-mt-adapter.tar
+   Size: 76.03 MB
+
+✅ request-reply
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/requestreply@sha256:71914f7bd6754f645ef7367542c517c5d0fb31313fe8d814132fdb6ecd963047
+   Method: docker export
+   Local tag: request-reply:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/request-reply:v1.21.2
+   Archive: request-reply.tar
+   Size: 71.48 MB
+
+✅ imc-controller
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/in_memory/channel_controller@sha256:1fdb9e4282af3c87a025ddeb8a8c9ce96fb06c5ecab10380367016c73d0facd6
+   Method: docker export
+   Local tag: imc-controller:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/imc-controller:v1.21.2
+   Archive: imc-controller.tar
+   Size: 76.61 MB
+
+✅ imc-dispatcher
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/in_memory/channel_dispatcher@sha256:c25cec2d01c133da26c41c3581a6b32eff331330818ac6bbad505fb5b8ebf541
+   Method: docker export
+   Local tag: imc-dispatcher:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/imc-dispatcher:v1.21.2
+   Archive: imc-dispatcher.tar
+   Size: 76.83 MB
+
+✅ mt-broker-controller
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/mtchannel_broker@sha256:a4b949364f7d86135deb6a111cdbfff8d8cafb1bbaa87bd16ed5a79a45b7c529
+   Method: docker export
+   Local tag: mt-broker-controller:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/mt-broker-controller:v1.21.2
+   Archive: mt-broker-controller.tar
+   Size: 75.00 MB
+
+✅ mt-broker-filter
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/broker/filter@sha256:359b0054ea5ef483765c6b503f4afdb02084b556dc93f52d0116db1701b16bb6
+   Method: docker export
+   Local tag: mt-broker-filter:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/mt-broker-filter:v1.21.2
+   Archive: mt-broker-filter.tar
+   Size: 75.78 MB
+
+✅ mt-broker-ingress
+   Original: gcr.io/knative-releases/knative.dev/eventing/cmd/broker/ingress@sha256:7566ceb851038eb21d7f7a033929bf3ca195f453df9c6d72deb6a5ac2a0427bc
+   Method: docker export
+   Local tag: mt-broker-ingress:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/mt-broker-ingress:v1.21.2
+   Archive: mt-broker-ingress.tar
+   Size: 75.72 MB
+
+✅ kafka-controller
+   Original: gcr.io/knative-releases/knative.dev/eventing-kafka-broker/control-plane/cmd/kafka-controller@sha256:84e06cfe2c8b0e72e2db52dc55da8b3db90db9d70a19ab1b007edd2e470e9a23
+   Method: docker export
+   Local tag: kafka-controller:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/kafka-controller:v1.21.2
+   Archive: kafka-controller.tar
+   Size: 85.12 MB
+
+✅ kafka-webhook
+   Original: gcr.io/knative-releases/knative.dev/eventing-kafka-broker/control-plane/cmd/webhook-kafka@sha256:2d31b9f938a51d21f5b5dd8712f9d4bcfbcb301ba3e885bea90b615cf270dd04
+   Method: docker export
+   Local tag: kafka-webhook:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/kafka-webhook:v1.21.2
+   Archive: kafka-webhook.tar
+   Size: 76.47 MB
+
+✅ kafka-dispatcher
+   Original: gcr.io/knative-releases/knative-kafka-broker-dispatcher-loom@sha256:328da3fdafbce4ca3244da158e3bff0107c805d8cbc05a4cf3600a803b2a079c
+   Method: docker export
+   Local tag: kafka-dispatcher:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/kafka-dispatcher:v1.21.2
+   Archive: kafka-dispatcher.tar
+   Size: 507.17 MB
+
+✅ kafka-receiver
+   Original: gcr.io/knative-releases/knative-kafka-broker-receiver-loom@sha256:8a31c6397b55feab8001d171700e64929d17209a8e02e3ca2b7cb1352b47bcdf
+   Method: docker export
+   Local tag: kafka-receiver:v1.21.2
+   Registry tag: harbor.idp.ecpk.ru/core/knative/kafka-receiver:v1.21.2
+   Archive: kafka-receiver.tar
+   Size: 443.09 MB
+
