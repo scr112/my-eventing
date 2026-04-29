@@ -22,17 +22,11 @@ def log_warning(msg): print(f"{YELLOW}[WARNING]{NC} {msg}")
 def log_error(msg): print(f"{RED}[ERROR]{NC} {msg}")
 
 class HarborImagePusher:
-    def __init__(self, version: str, target_registry: str = None, 
-                 git_repo: str = None, git_branch: str = 'main'):
+    def __init__(self, version: str, target_registry: str = None):
         self.version = version
-        self.version_without_v = version.replace('v', '')
         self.target_registry = target_registry or "harbor.idp.ecpk.ru/core/knative"
-        self.git_repo = git_repo or "https://github.com/scr112/my-eventing.git"
-        self.git_branch = git_branch
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.git_local_dir = os.path.join(self.base_dir, f"git-repo-{self.version_without_v}")
-        self.images_dir = os.path.join(self.git_local_dir, f"images-{self.version}")
-        self.manifests_dir = os.path.join(self.git_local_dir, f"manifests-{self.version}")
+        self.images_dir = os.path.join(self.base_dir, "images-v1.21.1")
         
         self.harbor_user = None
         self.harbor_password = None
@@ -79,64 +73,47 @@ class HarborImagePusher:
             log_error(f"Ошибка: {e}")
             return False
     
-    def import_image(self, tar_file: str, image_name: str) -> Tuple[bool, str]:
-        """Импортирует образ из tar файла используя docker import"""
+    def import_and_push_image(self, tar_file: str, image_name: str) -> Tuple[bool, str]:
+        """Импортирует и пушит образ"""
         try:
-            log_info(f"  Импорт: docker import {os.path.basename(tar_file)}")
+            target_tag = f"{self.target_registry}/{image_name}:{self.version}"
             
             # Импортируем образ
-            cmd = ['docker', 'import', tar_file]
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            log_info(f"  Импорт {image_name}...")
+            with open(tar_file, 'rb') as f:
+                import_cmd = ['docker', 'import', '-', target_tag]
+                import_result = subprocess.run(import_cmd, stdin=f, capture_output=True, text=True, timeout=300)
             
-            if result.returncode == 0:
-                image_id = result.stdout.strip()
-                log_success(f"  ✓ Образ импортирован: {image_id[:20]}...")
-                
-                # Тегируем образ
-                target_tag = f"{self.target_registry}/{image_name}:{self.version}"
-                tag_cmd = ['docker', 'tag', image_id, target_tag]
-                tag_result = subprocess.run(tag_cmd, capture_output=True, text=True)
-                
-                if tag_result.returncode == 0:
-                    log_success(f"  ✓ Образ перетегирован: {target_tag}")
-                    return True, target_tag
-                else:
-                    log_error(f"  ✗ Ошибка тегирования: {tag_result.stderr}")
-                    return False, tag_result.stderr
+            if import_result.returncode != 0:
+                log_error(f"  ✗ Ошибка импорта: {import_result.stderr[:200]}")
+                return False, import_result.stderr
+            
+            log_success(f"  ✓ Образ импортирован: {target_tag}")
+            
+            # Пушим образ
+            log_info(f"  Пуш в Harbor...")
+            push_cmd = ['docker', 'push', target_tag]
+            push_result = subprocess.run(push_cmd, capture_output=True, text=True, timeout=600)
+            
+            if push_result.returncode == 0:
+                log_success(f"  ✓ Образ запушен: {target_tag}")
+                return True, target_tag
             else:
-                log_error(f"  ✗ Ошибка импорта: {result.stderr[:200]}")
-                return False, result.stderr
+                log_error(f"  ✗ Ошибка пуша: {push_result.stderr[:200]}")
+                return False, push_result.stderr
                 
-        except subprocess.TimeoutExpired:
-            return False, "Timeout (300 seconds)"
         except Exception as e:
             return False, str(e)
     
-    def process_images(self) -> List[Dict]:
-        """Обрабатывает все tar файлы и импортирует образы"""
-        log_info("Поиск и импорт Docker образов...")
+    def process_all_images(self) -> List[Dict]:
+        """Обрабатывает все tar файлы"""
+        log_info(f"Поиск tar файлов в {self.images_dir}...")
         
-        # Проверяем несколько возможных директорий
-        possible_dirs = [
-            self.images_dir,
-            os.path.join(self.base_dir, f"images-{self.version}"),
-            os.path.join(self.base_dir, f"knative-images-{self.version}"),
-            self.base_dir
-        ]
-        
-        images_dir = None
-        for dir_path in possible_dirs:
-            if os.path.exists(dir_path):
-                images_dir = dir_path
-                log_info(f"Найдена директория с образами: {images_dir}")
-                break
-        
-        if not images_dir:
-            log_error("Директория с образами не найдена")
+        if not os.path.exists(self.images_dir):
+            log_error(f"Директория не найдена: {self.images_dir}")
             return []
         
-        # Ищем все tar файлы
-        tar_files = glob.glob(os.path.join(images_dir, "*.tar"))
+        tar_files = glob.glob(os.path.join(self.images_dir, "*.tar"))
         
         if not tar_files:
             log_error("Tar файлы не найдены")
@@ -144,103 +121,57 @@ class HarborImagePusher:
         
         log_info(f"Найдено {len(tar_files)} архивов")
         
-        processed_images = []
+        results = []
         
-        for tar_file in sorted(tar_files):
+        for idx, tar_file in enumerate(sorted(tar_files), 1):
             file_name = os.path.basename(tar_file)
             image_name = file_name.replace('.tar', '')
             file_size = os.path.getsize(tar_file) / (1024 * 1024)
             
             print(f"\n{'='*60}")
-            log_info(f"Обработка: {file_name} ({file_size:.1f} MB)")
+            log_info(f"[{idx}/{len(tar_files)}] {image_name} ({file_size:.1f} MB)")
             
-            # Импортируем образ
-            success, result = self.import_image(tar_file, image_name)
+            success, result = self.import_and_push_image(tar_file, image_name)
             
-            if success:
-                processed_images.append({
-                    'name': image_name,
-                    'tar_file': tar_file,
-                    'loaded_image': result,
-                    'size_mb': file_size,
-                    'status': 'imported'
-                })
-            else:
-                log_error(f"  ✗ Не удалось импортировать {image_name}")
+            results.append({
+                'name': image_name,
+                'size_mb': file_size,
+                'success': success,
+                'message': result
+            })
         
-        log_success(f"\nИмпортировано {len(processed_images)} из {len(tar_files)} образов")
-        return processed_images
+        return results
     
-    def push_to_harbor(self, images: List[Dict]) -> Tuple[int, int]:
-        """Пушит образы в Harbor"""
-        log_info("\nПуш образов в Harbor...")
-        
-        success_count = 0
-        failed_count = 0
-        
-        for idx, img in enumerate(images, 1):
-            print(f"\n{'='*60}")
-            log_info(f"[{idx}/{len(images)}] Пуш: {img['name']}")
-            
-            target_tag = f"{self.target_registry}/{img['name']}:{self.version}"
-            log_info(f"Target: {target_tag}")
-            
-            # Проверяем существование образа
-            check_cmd = ['docker', 'image', 'inspect', img['loaded_image']]
-            check_result = subprocess.run(check_cmd, capture_output=True, text=True)
-            
-            if check_result.returncode != 0:
-                log_error(f"  ✗ Образ не найден: {img['loaded_image']}")
-                failed_count += 1
-                continue
-            
-            # Пушим образ
-            log_info("  Выполнение: docker push...")
-            push_cmd = ['docker', 'push', target_tag]
-            push_result = subprocess.run(push_cmd, capture_output=True, text=True, timeout=600)
-            
-            if push_result.returncode == 0:
-                log_success(f"  ✓ Успешно запушен")
-                success_count += 1
-            else:
-                error_msg = push_result.stderr[:200]
-                if "denied" in error_msg.lower():
-                    log_error(f"  ✗ Доступ запрещен. Проверьте права в Harbor")
-                elif "unauthorized" in error_msg.lower():
-                    log_error(f"  ✗ Ошибка авторизации. Проверьте логин/пароль")
-                else:
-                    log_error(f"  ✗ Ошибка пуша: {error_msg}")
-                failed_count += 1
-        
-        return success_count, failed_count
-    
-    def create_import_script(self, images: List[Dict]):
-        """Создает скрипт для ручного импорта и пуша"""
-        script_file = os.path.join(self.base_dir, f"import-and-push-{self.version}.sh")
+    def create_bash_script(self, results: List[Dict]):
+        """Создает bash скрипт для ручного выполнения"""
+        script_file = os.path.join(self.base_dir, f"push-to-harbor-{self.version}.sh")
         
         with open(script_file, 'w') as f:
             f.write("#!/bin/bash\n\n")
-            f.write(f"# Script to import and push images to Harbor for Knative {self.version}\n")
+            f.write(f"# Script to push Knative {self.version} images to Harbor\n")
             f.write(f"# Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
             
-            f.write("# Login to Harbor\n")
-            f.write(f"echo 'Login to Harbor...'\n")
+            f.write("echo 'Login to Harbor...'\n")
             f.write(f"docker login {self.target_registry.split('/')[0]}\n\n")
             
-            for img in images:
-                f.write(f"# Process {img['name']}\n")
-                f.write(f"echo 'Importing {img[\"name\"]}...'\n")
-                f.write(f"cat {img['tar_file']} | docker import - {self.target_registry}/{img['name']}:{self.version}\n")
-                f.write(f"docker push {self.target_registry}/{img['name']}:{self.version}\n")
-                f.write(f"echo '  ✓ {img[\"name\"]} pushed'\n\n")
+            for img in results:
+                if not img['success']:
+                    f.write(f"echo 'Processing {img['name']}...'\n")
+                    f.write(f"cat {self.images_dir}/{img['name']}.tar | docker import - {self.target_registry}/{img['name']}:{self.version}\n")
+                    f.write(f"docker push {self.target_registry}/{img['name']}:{self.version}\n")
+                    f.write(f"echo '  ✓ {img['name']} pushed'\n\n")
             
-            f.write('echo "All images pushed successfully!"\n')
+            f.write("echo 'All images processed!'\n")
         
         os.chmod(script_file, 0o755)
-        log_success(f"Скрипт для импорта и пуша создан: {script_file}")
+        if os.path.getsize(script_file) > 100:  # Если есть что писать
+            log_success(f"Bash скрипт создан: {script_file}")
     
-    def create_report(self, images: List[Dict], success: int, failed: int):
+    def create_report(self, results: List[Dict]):
         """Создает отчет"""
+        success_count = sum(1 for r in results if r['success'])
+        failed_count = len(results) - success_count
+        
         report_file = os.path.join(self.base_dir, f"push-report-{self.version}-{datetime.now().strftime('%Y%m%d-%H%M%S')}.txt")
         
         with open(report_file, 'w') as f:
@@ -248,18 +179,27 @@ class HarborImagePusher:
             f.write(f"# Version: {self.version}\n")
             f.write(f"# Target: {self.target_registry}\n")
             f.write(f"# Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-            f.write(f"# Total: {len(images)}\n")
-            f.write(f"# Success: {success}\n")
-            f.write(f"# Failed: {failed}\n")
+            f.write(f"# Total: {len(results)}\n")
+            f.write(f"# Success: {success_count}\n")
+            f.write(f"# Failed: {failed_count}\n")
             f.write("\n" + "=" * 80 + "\n\n")
             
-            for img in images:
-                target_tag = f"{self.target_registry}/{img['name']}:{self.version}"
-                f.write(f"✅ {img['name']}\n")
-                f.write(f"   Size: {img['size_mb']:.1f} MB\n")
-                f.write(f"   Target: {target_tag}\n\n")
+            f.write("## SUCCESSFUL PUSHES\n\n")
+            for r in results:
+                if r['success']:
+                    f.write(f"✅ {r['name']}\n")
+                    f.write(f"   Size: {r['size_mb']:.1f} MB\n")
+                    f.write(f"   Target: {self.target_registry}/{r['name']}:{self.version}\n\n")
+            
+            if failed_count > 0:
+                f.write("\n## FAILED PUSHES\n\n")
+                for r in results:
+                    if not r['success']:
+                        f.write(f"❌ {r['name']}\n")
+                        f.write(f"   Error: {r['message'][:200]}\n\n")
         
         log_success(f"Отчет сохранен: {report_file}")
+        return success_count, failed_count
     
     def run(self):
         """Основной метод"""
@@ -267,76 +207,52 @@ class HarborImagePusher:
         log_info(f"HARBOR IMAGE PUSHER - Knative {self.version}")
         print("=" * 80)
         log_info(f"Target Registry: {self.target_registry}")
-        log_info(f"Version: {self.version}")
+        log_info(f"Images Directory: {self.images_dir}")
         print()
         
         # 1. Получаем учетные данные
         if not self.get_credentials():
             return False
         
-        # 2. Обрабатываем и импортируем образы
-        images = self.process_images()
+        # 2. Обрабатываем образы
+        results = self.process_all_images()
         
-        if not images:
-            log_error("Не удалось импортировать ни одного образа")
-            log_info("\nПроверьте:")
-            log_info("  1. Что tar файлы находятся в правильной директории")
-            log_info("  2. Что файлы не повреждены")
-            log_info("  3. Что у вас есть права на чтение файлов")
+        if not results:
+            log_error("Не найдено образов для обработки")
             return False
         
-        # 3. Логин в Harbor
-        if not self.docker_login():
-            return False
+        # 3. Создаем отчет
+        success, failed = self.create_report(results)
         
-        # 4. Пуш в Harbor
-        success, failed = self.push_to_harbor(images)
+        # 4. Создаем bash скрипт для повторных попыток
+        if failed > 0:
+            self.create_bash_script(results)
         
-        # 5. Создаем вспомогательные файлы
-        self.create_import_script(images)
-        self.create_report(images, success, failed)
-        
-        # 6. Статистика
+        # 5. Статистика
         print("\n" + "=" * 80)
         log_info("СТАТИСТИКА")
         print("=" * 80)
-        log_info(f"Всего образов: {len(images)}")
-        log_info(f"Успешно запушено: {success}")
+        log_info(f"Всего образов: {len(results)}")
+        log_info(f"Успешно: {success}")
         log_info(f"Ошибок: {failed}")
         
-        total_size = sum(img['size_mb'] for img in images)
+        total_size = sum(r['size_mb'] for r in results)
         log_info(f"Общий размер: {total_size:.2f} MB")
         
-        if success == len(images):
+        if success == len(results):
             log_success("\n✅ Все образы успешно запушены в Harbor!")
         else:
             log_warning(f"\n⚠️ Не удалось запушнуть {failed} образов")
-            log_info(f"Для повторной попытки выполните: ./import-and-push-{self.version}.sh")
+            log_info(f"\nДля повторной попытки выполните:")
+            log_info(f"  ./push-to-harbor-{self.version}.sh")
         
         return success > 0
 
 def main():
-    import argparse
+    version = sys.argv[1] if len(sys.argv) > 1 else "v1.21.1"
+    registry = sys.argv[2] if len(sys.argv) > 2 else "harbor.idp.ecpk.ru/core/knative"
     
-    parser = argparse.ArgumentParser(description='Push Knative images to Harbor using docker import')
-    parser.add_argument('version', default='v1.21.1', nargs='?',
-                       help='Knative version (e.g., v1.21.1)')
-    parser.add_argument('--registry', default='harbor.idp.ecpk.ru/core/knative',
-                       help='Target Harbor registry')
-    parser.add_argument('--git-repo', default='https://github.com/scr112/my-eventing.git',
-                       help='Git repository with images')
-    parser.add_argument('--git-branch', default='main',
-                       help='Git branch')
-    
-    args = parser.parse_args()
-    
-    pusher = HarborImagePusher(
-        version=args.version,
-        target_registry=args.registry,
-        git_repo=args.git_repo,
-        git_branch=args.git_branch
-    )
-    
+    pusher = HarborImagePusher(version, registry)
     success = pusher.run()
     sys.exit(0 if success else 1)
 
