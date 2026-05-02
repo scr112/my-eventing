@@ -1,0 +1,200 @@
+{
+  "version": "v1.21.1",
+  "registry": "harbor.idp.ecpk.ru/core/knative",
+  "success_count": 24,
+  "failed_count": 0,
+  "images": [
+    {
+      "name": "kafka-dispatcher",
+      "original_image": "gcr.io/knative-releases/knative-kafka-broker-dispatcher-loom@sha256:23dd26ae46b1ce248d25745f0ae20d54b850f9f2c37adc78a6fc7296f4348c35",
+      "local_tag": "kafka-dispatcher:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/kafka-dispatcher:v1.21.1",
+      "tar_file": "kafka-dispatcher.tar",
+      "size_mb": 507.19140625
+    },
+    {
+      "name": "kafka-dispatcher",
+      "original_image": "gcr.io/knative-releases/knative-kafka-broker-dispatcher-loom@sha256:4541b16343f47544684aa97ccd878e1bae3a3bff08187449e7788a08657c7f34",
+      "local_tag": "kafka-dispatcher:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/kafka-dispatcher:v1.21.1",
+      "tar_file": "kafka-dispatcher.tar",
+      "size_mb": 507.19140625
+    },
+    {
+      "name": "kafka-receiver",
+      "original_image": "gcr.io/knative-releases/knative-kafka-broker-receiver-loom@sha256:975dc291e7f392a4ca3e5ac7c55ef608808d38c37a6a39ea97404f2382211a1e",
+      "local_tag": "kafka-receiver:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/kafka-receiver:v1.21.1",
+      "tar_file": "kafka-receiver.tar",
+      "size_mb": 443.10546875
+    },
+    {
+      "name": "kafka-controller",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing-kafka-broker/control-plane/cmd/kafka-controller@sha256:f5f95ca060a76122accfcb5977fb39026e14921a53085902d0ff8b84341f63e4",
+      "local_tag": "kafka-controller:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/kafka-controller:v1.21.1",
+      "tar_file": "kafka-controller.tar",
+      "size_mb": 83.84814453125
+    },
+    {
+      "name": "kafka-source-controller",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing-kafka-broker/control-plane/cmd/kafka-source-controller@sha256:757fb23fd26e178a2c69e174d48dee599b1c7ba3a72c2a8259785b7b67eb0960",
+      "local_tag": "kafka-source-controller:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/kafka-source-controller:v1.21.1",
+      "tar_file": "kafka-source-controller.tar",
+      "size_mb": 82.25146484375
+    },
+    {
+      "name": "post-install",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing-kafka-broker/control-plane/cmd/post-install@sha256:eddea045b0e5e703a875517829b994c7bd8aa8f09fb507aa7f380c15f92a18be",
+      "local_tag": "post-install:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/post-install:v1.21.1",
+      "tar_file": "post-install.tar",
+      "size_mb": 2.86962890625
+    },
+    {
+      "name": "kafka-webhook",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing-kafka-broker/control-plane/cmd/webhook-kafka@sha256:cef9110f9789a857fd5c53ca2cb4b1dc612bf8cccb8439ad405fe8ea918c334d",
+      "local_tag": "kafka-webhook:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/kafka-webhook:v1.21.1",
+      "tar_file": "kafka-webhook.tar",
+      "size_mb": 75.2041015625
+    },
+    {
+      "name": "appender",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/appender@sha256:1ac0a6949975b835b7e9cd37ffb5f651bc72eee1f1d19a8b77070644719b78e0",
+      "local_tag": "appender:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/appender:v1.21.1",
+      "tar_file": "appender.tar",
+      "size_mb": 10.97021484375
+    },
+    {
+      "name": "mt-broker-filter",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/broker/filter@sha256:542b9c68efc14354acca86d7ec175126733072a1f464aa9b4badd476c84d586d",
+      "local_tag": "mt-broker-filter:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/mt-broker-filter:v1.21.1",
+      "tar_file": "mt-broker-filter.tar",
+      "size_mb": 75.71533203125
+    },
+    {
+      "name": "mt-broker-ingress",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/broker/ingress@sha256:94f41c595588cf82fa30330600f775e20f22c3884dceffae8a8f82ef6dfa62eb",
+      "local_tag": "mt-broker-ingress:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/mt-broker-ingress:v1.21.1",
+      "tar_file": "mt-broker-ingress.tar",
+      "size_mb": 75.65185546875
+    },
+    {
+      "name": "eventing-controller",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/controller@sha256:dcb40ff2772016d1b0b79853e22f1b4713f1b807f585e9228085b40bf5370748",
+      "local_tag": "eventing-controller:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/eventing-controller:v1.21.1",
+      "tar_file": "eventing-controller.tar",
+      "size_mb": 79.48095703125
+    },
+    {
+      "name": "event_display",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/event_display@sha256:0d05cbf332a3facb0f154206c8e638306bcdb633275844083a1ff544713927a2",
+      "local_tag": "event_display:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/event_display:v1.21.1",
+      "tar_file": "event_display.tar",
+      "size_mb": 63.30322265625
+    },
+    {
+      "name": "heartbeats",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/heartbeats@sha256:4abc0564cee3ef2e25a9338a3a40624589343cef0f6e55baf987da24d7311c90",
+      "local_tag": "heartbeats:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/heartbeats:v1.21.1",
+      "tar_file": "heartbeats.tar",
+      "size_mb": 63.35986328125
+    },
+    {
+      "name": "imc-controller",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/in_memory/channel_controller@sha256:8bb78ed0047f8a22e9e5219f228be1d3d6fc7ff0f290f3c7f1f528eee675d2b9",
+      "local_tag": "imc-controller:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/imc-controller:v1.21.1",
+      "tar_file": "imc-controller.tar",
+      "size_mb": 76.54443359375
+    },
+    {
+      "name": "imc-dispatcher",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/in_memory/channel_dispatcher@sha256:669b6ba2e87f78d9951f5ba77279c4882937a9f23515d3b6f646c363185e3354",
+      "local_tag": "imc-dispatcher:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/imc-dispatcher:v1.21.1",
+      "tar_file": "imc-dispatcher.tar",
+      "size_mb": 76.76123046875
+    },
+    {
+      "name": "job-sink",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/jobsink@sha256:65f4d6eb37246705ec78557885e1844af2c230e0dbce34b4782c10c627fdf84a",
+      "local_tag": "job-sink:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/job-sink:v1.21.1",
+      "tar_file": "job-sink.tar",
+      "size_mb": 75.48291015625
+    },
+    {
+      "name": "mt-broker-controller",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/mtchannel_broker@sha256:8880e6525669494ec6694700d3a5fdd3a6381351009e26f9ab3cc09cdfc680f3",
+      "local_tag": "mt-broker-controller:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/mt-broker-controller:v1.21.1",
+      "tar_file": "mt-broker-controller.tar",
+      "size_mb": 74.943359375
+    },
+    {
+      "name": "pingsource-mt-adapter",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/mtping@sha256:03132ac495a7de81637192a6a4e0baa74384caba9eceb9ea5366a1dda734e1d6",
+      "local_tag": "pingsource-mt-adapter:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/pingsource-mt-adapter:v1.21.1",
+      "tar_file": "pingsource-mt-adapter.tar",
+      "size_mb": 75.96630859375
+    },
+    {
+      "name": "request-reply",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/requestreply@sha256:091f16e5b11116cb1d32876e7f21617a9f16dd66e6e7c41058e8a4892f8153b5",
+      "local_tag": "request-reply:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/request-reply:v1.21.1",
+      "tar_file": "request-reply.tar",
+      "size_mb": 71.42431640625
+    },
+    {
+      "name": "eventing-webhook",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/webhook@sha256:75384d137d8f129fa88a2228eb2528c8975f7f30254c02a1274ae43835ac3206",
+      "local_tag": "eventing-webhook:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/eventing-webhook:v1.21.1",
+      "tar_file": "eventing-webhook.tar",
+      "size_mb": 77.72119140625
+    },
+    {
+      "name": "websocketsource",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/cmd/websocketsource@sha256:caaf3c3a905829d241d0ea900ba3f6b3f183d4f764c73c335badbfcfe2154a60",
+      "local_tag": "websocketsource:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/websocketsource:v1.21.1",
+      "tar_file": "websocketsource.tar",
+      "size_mb": 10.85009765625
+    },
+    {
+      "name": "recordevents",
+      "original_image": "gcr.io/knative-releases/knative.dev/eventing/test/test_images/recordevents@sha256:627b42da597604ad06035a81c8834a2e238788d164621ef22f26f7ef952ef80f",
+      "local_tag": "recordevents:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/recordevents:v1.21.1",
+      "tar_file": "recordevents.tar",
+      "size_mb": 68.36279296875
+    },
+    {
+      "name": "migrate",
+      "original_image": "gcr.io/knative-releases/knative.dev/pkg/apiextensions/storageversion/cmd/migrate@sha256:2e3e0da54a59eb73e50f7a5cb9a44ac5b636298e104b1bf9ea03ac5b5bc5e81f",
+      "local_tag": "migrate:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/migrate:v1.21.1",
+      "tar_file": "migrate.tar",
+      "size_mb": 34.306640625
+    },
+    {
+      "name": "migrate",
+      "original_image": "gcr.io/knative-releases/knative.dev/pkg/apiextensions/storageversion/cmd/migrate@sha256:eaf9181c306f914a29b0eabf0d889ea29f160a5e40984335bb192567fe2da4b3",
+      "local_tag": "migrate:v1.21.1",
+      "registry_tag": "harbor.idp.ecpk.ru/core/knative/migrate:v1.21.1",
+      "tar_file": "migrate.tar",
+      "size_mb": 33.04833984375
+    }
+  ]
+}
